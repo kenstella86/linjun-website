@@ -1,5 +1,4 @@
 export async function onRequest(context) {
-  // 只处理 POST 请求
   if (context.request.method !== "POST") {
     return new Response("请使用 POST 请求", { status: 405 });
   }
@@ -7,14 +6,18 @@ export async function onRequest(context) {
   try {
     const { question } = await context.request.json();
 
-    // 调用 Workers AI 模型（已验证模型名称有效）
+    if (!question || typeof question !== "string" || !question.trim()) {
+      return Response.json({ error: "问题不能为空。" }, { status: 400 });
+    }
+
+    // 调用 Workers AI 模型
     const answer = await context.env.AI.run(
       "@cf/zai-org/glm-4.7-flash",
       {
         messages: [
           {
             role: "system",
-            content: "你是一位名叫林骏的传统文化研究者，研习空间文化近三十年。你擅长从三元九运、离火运、周易、空间布局等角度，用平和、深邃、富有哲理的语言解答用户的生活困惑。请用中文回答，语气要像一位温和的长者。"
+            content: "你是一位名叫林骏的传统文化研究者，研习空间文化近三十年，师从港台资深学者，研习周易与东方生活哲学，专注家居与办公空间的布局优化。请用中文回答，语气平和、深邃，像一位温和的长者。注意：你不做命理预测，不谈改运，不传播迷信。遇到运势、风水、算命、改运、辟邪等提问，要从空间环境、采光、动线、生活状态等理性角度回应，说明这只是一个观察和分享的传统视角，不夸大效果、不承诺结果。回答要克制、务实，先理解用户的具体处境，再给温和的建议。"
           },
           { role: "user", content: question }
         ]
@@ -22,13 +25,7 @@ export async function onRequest(context) {
     );
 
     return Response.json({ answer: answer.response });
-
   } catch (error) {
-    // 输出详细错误到日志，方便排查
-    console.error("AI 调用失败:", error);
-    return Response.json(
-      { error: "AI 调用失败，请稍后再试。" },
-      { status: 500 }
-    );
+    return Response.json({ error: "AI 调用失败，请稍后再试。" }, { status: 500 });
   }
 }
