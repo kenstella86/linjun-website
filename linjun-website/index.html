@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>林骏老师 | 离火运下的空间智慧</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,8 +21,9 @@
     background-color: var(--bg);
     color: var(--text-main);
     font-family: 'Noto Serif SC', 'Songti SC', serif;
-    line-height: 1.8;
+    line-height: 1.7;
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
   }
   
   /* 光影背景辅助 */
@@ -32,7 +33,7 @@
     opacity: 0.6; z-index: 0;
   }
 
-  /* 布局 */
+  /* 布局（桌面端） */
   .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
   .section { padding: 100px 0; display: flex; align-items: center; gap: 60px; }
   .section.reverse { flex-direction: row-reverse; }
@@ -45,7 +46,7 @@
   .section-text p { font-size: 1.05rem; margin-bottom: 18px; color: var(--text-sub); }
   .section-text p:last-child { margin-bottom: 0; }
 
-  /* ====== 图片自适应样式（已修改） ====== */
+  /* 图片自适应样式 */
   .section-visual img {
     width: 100%;
     height: 100%;
@@ -54,10 +55,10 @@
     transition: transform 0.5s ease;
   }
   .section-visual:hover img {
-    transform: scale(1.02); /* 鼠标悬停时微微放大，增加灵动感 */
+    transform: scale(1.02);
   }
 
-  /* 针对第三板块上下两张图的双图布局 */
+  /* 针对第三板块上下两张图的双图布局（桌面端） */
   .box-layout {
     display: grid; 
     grid-template-columns: 1fr; 
@@ -67,7 +68,7 @@
     background: #F9F7F1;
   }
   .box-layout img {
-    height: 200px; /* 双图布局下固定高度 */
+    height: 200px; 
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.05);
   }
@@ -106,15 +107,67 @@
   .ai-chat-input-area button { background: var(--text-main); color: var(--accent-light); border: none; border-radius: 20px; padding: 12px 20px; cursor: pointer; font-weight: 600; font-family: inherit; transition: 0.2s; }
   .ai-chat-input-area button:hover { background: var(--accent); color: #fff; }
 
-  /* 响应式 */
+  /* ================= 手机端专属优化（核心） ================= */
   @media (max-width: 820px) {
-    .section, .section.reverse { flex-direction: column; gap: 40px; padding: 60px 0; }
-    .section-text h2 { font-size: 1.8rem; }
-    .section-visual { min-height: 300px; width: 100%; }
-    .box-layout { padding: 10px; }
-    .box-layout img { height: 160px; }
-    .ai-chat-window { width: calc(100vw - 32px); right: 16px; bottom: 90px; height: 60vh; }
-    .ai-chat-btn { right: 16px; bottom: 16px; }
+    /* 基础字号全局微调，更适合手机阅读 */
+    html { font-size: 15px; }
+    
+    /* 间距缩小，防止屏幕过长 */
+    .section, .section.reverse { 
+      flex-direction: column; 
+      gap: 24px; 
+      padding: 45px 0; 
+    }
+    
+    /* 让文字处于上方，图片在下方，阅读更自然 */
+    .container { padding: 0 18px; }
+    
+    /* 标题和正文调整 */
+    .section-text h2 { font-size: 1.55rem; margin-bottom: 16px; letter-spacing: 1px; }
+    .section-text h3 { font-size: 1rem; margin-bottom: 6px; }
+    .section-text p { font-size: 0.95rem; margin-bottom: 14px; line-height: 1.75; text-align: justify; }
+    
+    /* 图片容器高度固定，防止手机屏幕被单张图片占满 */
+    .section-visual { 
+      width: 100%; 
+      min-height: auto; 
+      height: 240px; /* 单张图高度固定 */
+      border-radius: 8px;
+    }
+    
+    /* 双图布局手机端调整 */
+    .box-layout { 
+      padding: 12px; 
+      gap: 10px; 
+    }
+    .box-layout img { 
+      height: 160px; /* 双图布局中每张图的高度 */
+      border-radius: 6px;
+    }
+
+    /* AI 聊天窗口手机端适配 */
+    .ai-chat-window { 
+      width: calc(100vw - 24px); 
+      right: 12px; 
+      bottom: 84px; 
+      height: 65vh; 
+      border-radius: 10px;
+    }
+    .ai-chat-btn { 
+      width: 52px; 
+      height: 52px; 
+      right: 16px; 
+      bottom: 16px; 
+    }
+    .ai-chat-btn svg { width: 24px; height: 24px; }
+    
+    /* 聊天室内边距调整 */
+    .ai-chat-header { padding: 14px 16px; font-size: 1rem; }
+    .ai-chat-messages { padding: 14px; gap: 10px; }
+    .ai-msg { padding: 10px 14px; font-size: 0.9rem; max-width: 88%; }
+    .ai-chat-input-area { padding: 12px; gap: 8px; }
+    .ai-chat-input-area input { padding: 10px 14px; font-size: 0.9rem; }
+    .ai-chat-input-area button { padding: 10px 16px; font-size: 0.9rem; }
   }
 </style>
 </head>
@@ -124,7 +177,7 @@
 
 <!-- 板块 1：三元九运 -->
 <section class="section">
-  <div class="container" style="display: flex; gap: 60px; align-items: center;">
+  <div class="container" style="display: flex; gap: 60px; align-items: center; flex-wrap: wrap;">
     <div class="section-text">
       <h3>三元九运</h3>
       <h2>一百八十年里的二十年光明</h2>
@@ -133,7 +186,7 @@
       <p>这道火，不是焚尽一切的烈火，而是科技之火、文明之火、心灵觉醒之火。</p>
     </div>
     <div class="section-visual">
-      <!-- 替换为你的图片 -->
+      <!-- 第1张图：发光圆环 -->
       <img src="img-1.jpg" alt="三元九运光影视觉图">
     </div>
   </div>
@@ -141,7 +194,7 @@
 
 <!-- 板块 2：离火运下，什么变了？ -->
 <section class="section reverse">
-  <div class="container" style="display: flex; gap: 60px; align-items: center; flex-direction: row-reverse;">
+  <div class="container" style="display: flex; gap: 60px; align-items: center; flex-direction: row-reverse; flex-wrap: wrap;">
     <div class="section-text">
       <h3>林骏老师</h3>
       <h2>离火运下，什么变了？</h2>
@@ -152,7 +205,7 @@
       <p>所以国学热、养生热，不是突然火的，是人心真的需要了。</p>
     </div>
     <div class="section-visual">
-      <!-- 替换为你的图片 -->
+      <!-- 第2张图：土石发光 -->
       <img src="img-2.jpg" alt="土石发光视觉图">
     </div>
   </div>
@@ -160,7 +213,7 @@
 
 <!-- 板块 3：离火运下，空间该怎么调？ -->
 <section class="section">
-  <div class="container" style="display: flex; gap: 60px; align-items: center;">
+  <div class="container" style="display: flex; gap: 60px; align-items: center; flex-wrap: wrap;">
     <div class="section-text">
       <h3>林骏老师</h3>
       <h2>离火运下，空间该怎么调？</h2>
@@ -170,7 +223,7 @@
       <p>空间调整，不是改运。是让你待的地方，更合时代节奏，也更合你自己的状态。</p>
     </div>
     <div class="section-visual">
-      <!-- 替换为你的两张图片 -->
+      <!-- 第3、4张图：办公与居家空间布局 -->
       <div class="box-layout">
         <img src="img-3a.jpg" alt="办公空间布局图">
         <img src="img-3b.jpg" alt="居家空间布局图">
@@ -181,7 +234,7 @@
 
 <!-- 板块 4：三十年，只做一件事 -->
 <section class="section reverse">
-  <div class="container" style="display: flex; gap: 60px; align-items: center; flex-direction: row-reverse;">
+  <div class="container" style="display: flex; gap: 60px; align-items: center; flex-direction: row-reverse; flex-wrap: wrap;">
     <div class="section-text">
       <h3>林骏老师</h3>
       <h2>三十年，只做一件事</h2>
@@ -192,7 +245,7 @@
       <p>分享一种看待变化、安顿身心的传统视角。</p>
     </div>
     <div class="section-visual">
-      <!-- 替换为你的图片 -->
+      <!-- 第5张图：茶具与书本 -->
       <img src="img-4.jpg" alt="木桌、书与茶具视觉图">
     </div>
   </div>
