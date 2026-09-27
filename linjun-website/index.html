@@ -25,70 +25,75 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* ================= 页面排版（全端通用，重点适配手机） ================= */
-  .container { max-width: 800px; margin: 0 auto; padding: 0 24px; }
-  .section { padding: 50px 0; }
+  /* ================= 页面排版（默认就是手机单列，绝对不并排） ================= */
+  .container { max-width: 800px; margin: 0 auto; padding: 0 18px; }
+  .section { padding: 45px 0; }
   
-  /* 文字区块样式 */
-  .section-text h2 { font-size: 1.6rem; font-weight: 600; margin-bottom: 18px; color: var(--text-main); letter-spacing: 1px; line-height: 1.4; }
-  .section-text h3 { font-size: 1.05rem; color: var(--accent); margin-bottom: 8px; font-weight: 600; }
-  .section-text p { font-size: 1rem; margin-bottom: 18px; color: var(--text-sub); text-align: justify; }
+  /* 文字区块样式（针对手机屏幕调小字号，增加行距） */
+  .section-text h3 { font-size: 0.95rem; color: var(--accent); margin-bottom: 8px; font-weight: 600; }
+  .section-text h2 { font-size: 1.45rem; font-weight: 600; margin-bottom: 18px; color: var(--text-main); letter-spacing: 1px; line-height: 1.45; }
+  .section-text p { font-size: 0.95rem; margin-bottom: 16px; color: var(--text-sub); text-align: justify; }
   .section-text p:last-child { margin-bottom: 0; }
 
-  /* 图片区块样式（关键修改：图片随宽度自适应，保持原比例） */
-  .section-visual { margin-top: 24px; border-radius: 8px; overflow: hidden; }
+  /* 图片区块样式（手机端固定为全宽，保持原图比例） */
+  .section-visual { margin-top: 24px; }
   .section-visual img {
     width: 100%;
-    height: auto;       /* 高度自适应，保持图片原始比例，绝不裁切 */
+    height: auto;       /* 高度自适应，绝不裁切和变形 */
     display: block;
     border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(74,53,37,0.08);
   }
 
-  /* 双图布局（办公与居家）：手机端自动上下堆叠，PC端并排 */
+  /* 双图布局（办公与居家）：手机端绝对是上下两张图！ */
   .box-layout {
-    display: grid;
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column; /* 强制上下排列 */
     gap: 16px;
   }
-  .box-layout img { width: 100%; height: auto; display: block; border-radius: 8px; }
+  .box-layout img { width: 100%; height: auto; display: block; border-radius: 8px; box-shadow: 0 4px 12px rgba(74,53,37,0.08); }
 
-  /* ================= 悬浮 AI 对话框 ================= */
+  /* ================= 悬浮 AI 对话框（手机端专门适配） ================= */
   .ai-chat-btn {
     position: fixed; bottom: 20px; right: 20px; width: 56px; height: 56px;
     border-radius: 50%; background: var(--text-main); color: #E8D5B5; border: none;
     box-shadow: 0 4px 16px rgba(74,53,37,0.3); cursor: pointer; z-index: 3000;
     display: grid; place-items: center; transition: all 0.3s ease;
   }
-  .ai-chat-btn:hover { transform: scale(1.1); background: var(--accent); color: #fff; }
   .ai-chat-btn svg { width: 26px; height: 26px; }
-
+  
   .ai-chat-window {
-    position: fixed; bottom: 88px; right: 20px; width: 360px; height: 520px;
+    position: fixed; bottom: 88px; right: 12px; width: calc(100vw - 24px); height: 65vh;
     background: var(--bg); border-radius: 12px; box-shadow: 0 12px 40px rgba(74,53,37,0.15);
     display: none; flex-direction: column; z-index: 3000; overflow: hidden;
     border: 1px solid #E8D5B5;
   }
   .ai-chat-window.open { display: flex; }
   .ai-chat-header {
-    background: var(--text-main); color: #E8D5B5; padding: 16px 20px;
-    font-weight: 600; display: flex; justify-content: space-between; align-items: center; font-size: 1rem;
+    background: var(--text-main); color: #E8D5B5; padding: 14px 16px;
+    font-weight: 600; display: flex; justify-content: space-between; align-items: center; font-size: 0.95rem;
   }
   .ai-chat-header button { background: none; border: none; color: #E8D5B5; cursor: pointer; font-size: 22px; }
-  .ai-chat-messages { flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; background: #F9F7F1; }
-  .ai-msg { max-width: 85%; padding: 12px 16px; border-radius: 10px; font-size: 0.95rem; line-height: 1.6; word-wrap: break-word; box-shadow: 0 2px 6px rgba(0,0,0,0.03); }
+  .ai-chat-messages { flex: 1; padding: 14px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #F9F7F1; }
+  .ai-msg { max-width: 88%; padding: 10px 14px; border-radius: 10px; font-size: 0.9rem; line-height: 1.6; word-wrap: break-word; box-shadow: 0 2px 6px rgba(0,0,0,0.03); }
   .ai-msg.bot { background: #fff; border: 1px solid #E8D5B5; align-self: flex-start; border-bottom-left-radius: 2px; color: var(--text-main); }
   .ai-msg.user { background: var(--accent); color: #fff; align-self: flex-end; border-bottom-right-radius: 2px; }
   .ai-chat-input-area { display: flex; padding: 12px; border-top: 1px solid #E8D5B5; background: #fff; gap: 8px; }
-  .ai-chat-input-area input { flex: 1; padding: 10px 16px; border: 1px solid #E8D5B5; border-radius: 20px; outline: none; font-size: 0.95rem; font-family: inherit; color: var(--text-main); background: #F9F7F1; }
+  .ai-chat-input-area input { flex: 1; padding: 10px 14px; border: 1px solid #E8D5B5; border-radius: 20px; outline: none; font-size: 0.9rem; font-family: inherit; color: var(--text-main); background: #F9F7F1; }
   .ai-chat-input-area input:focus { border-color: var(--accent); background: #fff; }
-  .ai-chat-input-area button { background: var(--text-main); color: #E8D5B5; border: none; border-radius: 20px; padding: 10px 18px; cursor: pointer; font-weight: 600; font-family: inherit; }
+  .ai-chat-input-area button { background: var(--text-main); color: #E8D5B5; border: none; border-radius: 20px; padding: 10px 16px; cursor: pointer; font-weight: 600; font-family: inherit; }
 
-  /* ================= 针对手机端特别优化的媒体查询 ================= */
+  /* ================= 针对电脑端（大屏）的适配 ================= */
   @media (min-width: 768px) {
-    /* 如果是电脑大屏，双图并排显示 */
-    .box-layout { grid-template-columns: 1fr 1fr; }
-    .section { padding: 80px 0; }
+    .container { padding: 0 24px; }
+    .section { padding: 80px 0; display: flex; align-items: center; gap: 60px; }
+    .section.reverse { flex-direction: row-reverse; }
+    .section-text { flex: 1; }
     .section-text h2 { font-size: 2rem; }
+    .section-visual { flex: 1.2; margin-top: 0; }
+    .box-layout { flex-direction: row; flex-wrap: wrap; }
+    .box-layout img { flex: 1; width: calc(50% - 8px); }
+    .ai-chat-window { right: 20px; width: 360px; height: 520px; }
   }
 </style>
 </head>
