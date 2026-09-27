@@ -9,7 +9,7 @@ export async function onRequest(context) {
 
     // 调用 Workers AI 模型（已验证模型名称有效）
     const answer = await context.env.AI.run(
-      "@cf/meta/llama-3.1-8b-instruct-fast",
+      "@cf/zai-org/glm-4.7-flash",
       {
         messages: [
           {
