@@ -274,13 +274,17 @@
   }
 
   var REPLY_RULES = [
+    { k: ['你是谁', '介绍', '林骏', '老师是谁'], v: '我是林骏，研习空间文化近三十年，师从港台资深学者，研习周易与东方生活哲学。我专注家居与办公空间的布局优化，分享一种看待变化、安顿身心的传统视角。' },
+    { k: ['你好', '您好', '在吗', 'hi', 'hello', '嗨'], v: '你好。关于离火运、空间布局，或者你正在为办公、居家环境感到困扰的问题，都可以问我。' },
     { k: ['办公室', '办公', '工位', '老板'], v: '办公位置的核心是“状态优先”：采光要好、背后有靠、动线少被打扰。建议先拍一张你工位的照片，从光线、动线和视野三个角度看看怎么调。' },
-    { k: ['居家', '家里', '家 ', '客厅', '卧室'], v: '居家空间先做“留白”：光线要足、角落别堆满，你希望回家是放松还是高效，决定了布局的重心。' },
+    { k: ['居家', '家里', '客厅', '卧室'], v: '居家空间先做“留白”：光线要足、角落别堆满。你希望回家是放松还是高效，决定了布局的重心。' },
     { k: ['火运', '离火', '三元', '九运', '大运'], v: '离火运这二十年，重心从实体转向无形——人的感受、审美、精神需求。空间也从“够大”转向“合你”。' },
     { k: ['风水', '运势', '改运', '算命'], v: '我不做命理预测，也不谈改运。我分享的是传统空间文化视角：位置怎么摆，能让你待着更舒服、状态更稳。' },
-    { k: ['书', '茶', '静', '心'], v: '心定则空间定。一杯茶、一盏光、一个背后有靠的位置，都是安顿自己的方式。' }
+    { k: ['位置', '怎么调', '布局'], v: '空间调整，不是改运。是让你待的地方更合时代节奏，也更合你自己的状态。你可以发一张所在空间的照片，我结合具体布局给你参考。' },
+    { k: ['书', '茶', '静', '心'], v: '心定则空间定。一杯茶、一盏光、一个背后有靠的位置，都是安顿自己的方式。' },
+    { k: ['收费', '费用', '联系', '电话', '微信', '预约'], v: '具体服务与咨询方式，建议直接联系林骏老师本人沟通。你也可以先说说你的空间情况，我帮你看看方向。' }
   ];
-  var FALLBACK = '这个问题很好。你可以发一张你所在空间的照片，我结合具体布局给你参考（当前为演示版，正式接入请配置后端）。';
+  var FALLBACK = '欢迎你发一张所在空间的照片，我结合具体布局给你参考。也可以换个问法，例如“办公室位置怎么调”或“离火运怎么看”。';
 
   function reply(text) {
     for (var i = 0; i < REPLY_RULES.length; i++) {
@@ -298,6 +302,7 @@
     div.textContent = text;
     messages.appendChild(div);
     messages.scrollTop = messages.scrollHeight;
+    return div;
   }
 
   function sendAiMessage() {
@@ -306,7 +311,30 @@
     if (!text) return;
     addAiMsg(text, 'user');
     input.value = '';
-    setTimeout(function () { addAiMsg(reply(text), 'bot'); }, 400);
+    var wait = addAiMsg('林骏老师正在思考…', 'bot');
+
+    var timer = setTimeout(function () {
+      wait.textContent = reply(text);
+    }, 10000);
+
+    fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question: text })
+    })
+    .then(function (res) { return res.json(); })
+    .then(function (data) {
+      clearTimeout(timer);
+      if (data && data.answer) {
+        wait.textContent = data.answer;
+      } else {
+        wait.textContent = reply(text);
+      }
+    })
+    .catch(function () {
+      clearTimeout(timer);
+      wait.textContent = reply(text);
+    });
   }
 </script>
 </body>
